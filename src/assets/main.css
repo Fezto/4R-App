@@ -1,2 +1,317 @@
 @import "tailwindcss";
-@import './base.css';
+
+/* ===== CONFIGURACIÓN GLOBAL DE PRIMEVUE 4 ===== */
+
+/* Sobrescribir estilos de PrimeVue Tabs para evitar fondos oscuros */
+:root {
+  /* Forzar que los TabPanels usen el mismo fondo que el body */
+  --p-tabpanels-background: transparent;
+
+  /* Mejorar espaciado y bordes de componentes */
+  --p-content-border-radius: 0.75rem;
+  --p-card-border-radius: 0.75rem;
+
+  /* Sombras más profesionales y sutiles */
+  --p-card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+
+  /* Espaciado consistente */
+  --p-card-body-padding: 1.5rem;
+  --p-card-title-gap: 0.5rem;
+
+  /* Mejorar contraste de texto secundario para lectura prolongada */
+  --p-text-muted-color: rgba(255, 255, 255, 0.75);
+}
+
+/* Asegurar que el contenedor de tabs no tenga fondo extra */
+.p-tabpanels,
+.p-tabpanel {
+  background: transparent !important;
+}
+
+/* ===== TIPOGRAFÍA PROFESIONAL ===== */
+
+/* Títulos principales (h1) */
+h1 {
+  font-size: 1.875rem; /* 30px */
+  font-weight: 700;
+  line-height: 2.25rem;
+  letter-spacing: -0.025em;
+  margin-bottom: 0.5rem;
+  color: var(--p-text-color);
+}
+
+/* Títulos secundarios (h2) */
+h2 {
+  font-size: 1.5rem; /* 24px */
+  font-weight: 600;
+  line-height: 2rem;
+  letter-spacing: -0.0125em;
+  margin-bottom: 0.5rem;
+  color: var(--p-text-color);
+}
+
+/* Títulos terciarios (h3) */
+h3 {
+  font-size: 1.25rem; /* 20px */
+  font-weight: 600;
+  line-height: 1.75rem;
+  margin-bottom: 0.5rem;
+  color: var(--p-text-color);
+}
+
+/* Subtítulos y descripciones - MEJOR CONTRASTE */
+.subtitle,
+p.subtitle {
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.5rem;
+  color: rgba(255, 255, 255, 0.75); /* Contraste mejorado */
+}
+
+/* Párrafos normales - MEJOR CONTRASTE */
+p {
+  color: rgba(255, 255, 255, 0.75); /* Contraste mejorado */
+}
+
+/* ===== COMPONENTES PRIMEVUE ===== */
+
+/* Cards con mejor presentación y sombras sutiles */
+.p-card {
+  border-radius: 0.75rem;
+  overflow: hidden;
+  transition: all 0.2s ease-in-out;
+  background: var(--p-card-background);
+  border: 1px solid rgba(255, 255, 255, 0.08); /* Borde sutil visible */
+  box-shadow:
+    0 1px 3px 0 rgba(0, 0, 0, 0.3),
+    0 1px 2px -1px rgba(0, 0, 0, 0.2),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05); /* Brillo interno sutil */
+}
+
+.p-card:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 4px 12px -2px rgba(0, 0, 0, 0.4),
+    0 2px 8px -2px rgba(0, 0, 0, 0.3),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  border-color: var(--p-primary-color);
+}
+
+.p-card-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.75rem;
+  margin-bottom: 0.5rem;
+  color: var(--p-text-color);
+}
+
+.p-card-subtitle {
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+  color: rgba(255, 255, 255, 0.75); /* Contraste mejorado */
+  margin-bottom: 0.75rem;
+}
+
+/* Tabs profesionales con separador sutil */
+.p-tablist {
+  gap: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Separador más visible */
+  padding-bottom: 0.25rem;
+  box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.2); /* Sombra sutil bajo el separador */
+}
+
+.p-tab {
+  font-weight: 500;
+  transition: all 0.15s ease-in-out;
+  padding: 0.75rem 1.25rem;
+  color: rgba(255, 255, 255, 0.65);
+  border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.p-tab:hover {
+  transform: translateY(-1px);
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.p-tab[data-p-active="true"] {
+  color: var(--p-primary-color);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Botones con mejor espaciado */
+.p-button {
+  font-weight: 500;
+  transition: all 0.15s ease-in-out;
+  border-radius: 0.5rem;
+}
+
+.p-button:not(.p-button-text):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.3);
+}
+
+/* Inputs y selects con bordes y sombras sutiles */
+.p-inputtext,
+.p-inputnumber-input,
+.p-select,
+.p-datepicker,
+.p-textarea {
+  border-radius: 0.5rem;
+  transition: all 0.15s ease-in-out;
+  background: var(--p-inputtext-background);
+  border: 1px solid rgba(255, 255, 255, 0.12); /* Borde más visible */
+  color: var(--p-inputtext-color);
+  box-shadow:
+    inset 0 1px 2px 0 rgba(0, 0, 0, 0.15),
+    0 0 0 0 transparent; /* Sombra interna sutil */
+}
+
+.p-inputtext:hover,
+.p-inputnumber-input:hover,
+.p-select:hover,
+.p-datepicker:hover,
+.p-textarea:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow:
+    inset 0 1px 2px 0 rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.p-inputtext:focus,
+.p-inputnumber-input:focus,
+.p-select:focus,
+.p-datepicker:focus,
+.p-textarea:focus {
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 1px 2px 0 rgba(0, 0, 0, 0.1),
+    0 0 0 3px rgba(var(--p-primary-500), 0.15);
+  border-color: var(--p-primary-color);
+}
+
+.p-inputtext::placeholder,
+.p-inputnumber-input::placeholder,
+.p-textarea::placeholder {
+  color: rgba(255, 255, 255, 0.45); /* Placeholder con mejor contraste */
+}
+
+/* Labels más profesionales con mejor contraste */
+label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.5rem;
+  display: block;
+  margin-bottom: 0.5rem;
+  color: rgba(255, 255, 255, 0.9); /* Mejor contraste para labels */
+}
+
+/* Tags con mejor estilo */
+.p-tag {
+  font-weight: 500;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: 0.375rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* Drawer más profesional con sombra profunda */
+.p-drawer {
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.4),
+    0 8px 10px -6px rgba(0, 0, 0, 0.3),
+    inset -1px 0 0 0 rgba(255, 255, 255, 0.05); /* Brillo sutil en el borde */
+  background: var(--p-drawer-background);
+}
+
+.p-drawer-header {
+  padding: 1.25rem 1.5rem;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--p-text-color);
+  box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.2); /* Sombra sutil bajo el header */
+}
+
+/* Toast notifications */
+.p-toast {
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.p-toast-message {
+  border-radius: 0.75rem;
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.3),
+    0 4px 6px -4px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+/* InputGroup más limpio con separadores sutiles */
+.p-inputgroup {
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.15);
+}
+
+.p-inputgroup > *:not(:last-child) {
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ===== RAIL/SIDEBAR con separación visual ===== */
+aside {
+  background: var(--p-content-background);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 1px 0 0 0 rgba(0, 0, 0, 0.2); /* Sombra sutil a la derecha */
+}
+
+/* ===== SECCIONES Y CONTENEDORES ===== */
+section {
+  /* Agregar separación visual sutil entre secciones */
+  position: relative;
+}
+
+/* Separador visual para el área de contenido principal */
+main {
+  background: var(--p-content-background);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.03);
+}
+
+/* ===== ANIMACIONES SUAVES ===== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.p-card,
+.p-tabpanel {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* ===== RESPONSIVIDAD ===== */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+
+  .p-card-body {
+    padding: 1rem;
+  }
+
+  /* Reducir sombras en móvil para mejor rendimiento */
+  .p-card {
+    box-shadow:
+      0 1px 2px 0 rgba(0, 0, 0, 0.2),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+}
