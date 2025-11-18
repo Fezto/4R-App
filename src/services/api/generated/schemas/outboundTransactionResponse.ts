@@ -5,7 +5,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { OutboundTransactionResponsePdfPath } from './outboundTransactionResponsePdfPath';
-import type { OutboundTransactionResponsePurchaseOrderPath } from './outboundTransactionResponsePurchaseOrderPath';
+import type { OutboundTransactionResponsePaymentComplementPath } from './outboundTransactionResponsePaymentComplementPath';
 
 /**
  * Respuesta después de crear una salida completa
@@ -17,7 +17,8 @@ export interface OutboundTransactionResponse {
   details_created: number;
   pdf_generated: boolean;
   pdf_path?: OutboundTransactionResponsePdfPath;
-  purchase_order_generated: boolean;
-  purchase_order_path?: OutboundTransactionResponsePurchaseOrderPath;
+  payment_complement_required: boolean;
+  payment_complement_saved: boolean;
+  payment_complement_path?: OutboundTransactionResponsePaymentComplementPath;
   message: string;
 }

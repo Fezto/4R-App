@@ -214,6 +214,12 @@
                     <label class="field-label">Forma de pago</label>
                     <Select v-model="inboundForm.payment_form_code" :options="paymentFormChoices" optionLabel="label" optionValue="value" />
                   </div>
+                  <div class="movement-field" v-if="inboundForm.payment_form_code === PaymentFormCodeEnum.NUMBER_99">
+                    <label class="field-label">Complemento de pago (PDF)</label>
+                    <FileUpload mode="basic" accept="application/pdf" chooseLabel="Seleccionar PDF" :maxFileSize="10 * 1024 * 1024" customUpload :auto="false" @select="onInboundPrimeSelect" @clear="onInboundPrimeClear" />
+                    <small class="text-xs" v-if="inboundComplementFile">Archivo listo: {{ inboundComplementFile.name }}</small>
+                    <small class="text-xs" v-else>Si seleccionas PPD (99), puedes subir aquí el PDF del complemento.</small>
+                  </div>
                   <div class="movement-field">
                     <label class="field-label">Folio pago</label>
                     <InputText v-model="inboundForm.payment_folio" />
@@ -353,6 +359,12 @@
                     <label class="field-label">Forma de pago</label>
                     <Select v-model="outboundForm.payment_form_code" :options="paymentFormChoices" optionLabel="label" optionValue="value" />
                   </div>
+                  <div class="movement-field" v-if="outboundForm.payment_form_code === PaymentFormCodeEnum.NUMBER_99">
+                    <label class="field-label">Complemento de pago (PDF)</label>
+                    <FileUpload mode="basic" accept="application/pdf" chooseLabel="Seleccionar PDF" :maxFileSize="10 * 1024 * 1024" customUpload :auto="false" @select="onOutboundPrimeSelect" @clear="onOutboundPrimeClear" />
+                    <small class="text-xs" v-if="outboundComplementFile">Archivo listo: {{ outboundComplementFile.name }}</small>
+                    <small class="text-xs" v-else>Si seleccionas PPD (99), sube aquí el PDF del complemento (requerido por el servidor).</small>
+                  </div>
                   <div class="movement-field">
                     <label class="field-label">Folio pago</label>
                     <InputText v-model="outboundForm.payment_folio" />
@@ -415,10 +427,6 @@
                     <Checkbox v-model="outboundForm.generate_pdf" binary inputId="outbound-pdf" />
                     <label for="outbound-pdf" class="text-sm cursor-pointer">Generar PDF</label>
                   </div>
-                  <div class="flex items-center gap-3">
-                    <Checkbox v-model="outboundForm.generate_purchase_order" binary inputId="outbound-po" />
-                    <label for="outbound-po" class="text-sm cursor-pointer">Generar orden de compra</label>
-                  </div>
                 </div>
               </template>
             </Card>
@@ -436,14 +444,16 @@
 
 <script setup>
 import { ref, reactive, computed, watch } from 'vue'
+import FileUpload from 'primevue/fileupload'
 import { useToast } from 'primevue/usetoast'
 import { useQueryClient } from '@tanstack/vue-query'
 import { useListSuppliers } from '@/services/api/generated/suppliers/suppliers'
 import { useListInventories } from '@/services/api/generated/inventory/inventory'
 import { useListOperations } from '@/services/api/generated/operations/operations'
 import { useCreateCompleteInbound, useCreateCompleteOutbound } from '@/services/api/generated/transactions/transactions'
-import { downloadInboundPDF, downloadOutboundPDF, downloadPurchaseOrderPDF } from '@/services/api/generated/pdfs/pdfs'
+import { downloadInboundPDF, downloadOutboundPDF } from '@/services/api/generated/pdfs/pdfs'
 import { PaymentFormCode as PaymentFormCodeEnum, Transporter as TransporterEnum } from '@/services/api/generated/schemas'
+import { ref as vueRef } from 'vue'
 
 const toast = useToast()
 const queryClient = useQueryClient()
@@ -533,8 +543,7 @@ function newForm(prefix) {
     tax_rate: null,
     fiscal_folio: '',
     items: [createItem()],
-    generate_pdf: true,
-    generate_purchase_order: false
+    generate_pdf: true
   }
 }
 function regenerateFolio(form,prefix){ form.folio = generateFolio(prefix) }
@@ -545,6 +554,45 @@ function resetOutbound(){ Object.assign(outboundForm, newForm('SAL')) }
 
 const inboundForm = reactive(newForm('ENT'))
 const outboundForm = reactive(newForm('SAL'))
+
+const inboundComplementFile = vueRef(null)
+const outboundComplementFile = vueRef(null)
+
+function onInboundComplementChange(e) {
+  const f = e?.target?.files?.[0] ?? null
+  inboundComplementFile.value = f && f.type === 'application/pdf' ? f : null
+}
+
+function onOutboundComplementChange(e) {
+  const f = e?.target?.files?.[0] ?? null
+  outboundComplementFile.value = f && f.type === 'application/pdf' ? f : null
+}
+
+function onInboundPrimeSelect(e) {
+  inboundComplementFile.value = e?.files?.[0] ?? null
+}
+
+function onInboundPrimeClear() {
+  inboundComplementFile.value = null
+}
+
+function onOutboundPrimeSelect(e) {
+  outboundComplementFile.value = e?.files?.[0] ?? null
+}
+
+function onOutboundPrimeClear() {
+  outboundComplementFile.value = null
+}
+
+function readFileAsDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    if (!file) return resolve(null)
+    const reader = new FileReader()
+    reader.onload = () => resolve(reader.result)
+    reader.onerror = () => reject(reader.error)
+    reader.readAsDataURL(file)
+  })
+}
 
 // Formatting
 const currencyFmt = new Intl.NumberFormat('es-MX',{ style:'currency', currency:'MXN', minimumFractionDigits:2 })
@@ -628,6 +676,18 @@ async function submitInbound(){
       items: inboundForm.items.map(i=>({ inventory_id:i.inventory_id, quantity:Number(i.quantity)||0, unit_price:Number(i.unit_price)||0 })),
       generate_pdf: inboundForm.generate_pdf
     }
+    // attach optional payment complement if provided
+    if (inboundForm.payment_form_code === PaymentFormCodeEnum.NUMBER_99 && inboundComplementFile.value) {
+      try {
+        const dataUrl = await readFileAsDataUrl(inboundComplementFile.value)
+        if (dataUrl) {
+          payload.payment_complement_pdf_base64 = dataUrl
+          payload.payment_complement_filename = inboundComplementFile.value.name
+        }
+      } catch (err) {
+        console.error('Error reading inbound complement file', err)
+      }
+    }
     const resp = await inboundMutation.mutateAsync({data:payload})
     if(resp.status===201){
       toast.add({severity:'success', summary:'Entrada creada', detail: resp.data.message || `Folio ${payload.folio} listo`, life:4500})
@@ -673,8 +733,19 @@ async function submitOutbound(){
       tax_rate: outboundForm.tax_rate || undefined,
       fiscal_folio: opt(outboundForm.fiscal_folio),
       items: outboundForm.items.map(i=>({ inventory_id:i.inventory_id, quantity:Number(i.quantity)||0, unit_price:Number(i.unit_price)||0 })),
-      generate_pdf: outboundForm.generate_pdf,
-      generate_purchase_order: outboundForm.generate_purchase_order
+      generate_pdf: outboundForm.generate_pdf
+    }
+    // attach optional payment complement if provided
+    if (outboundForm.payment_form_code === PaymentFormCodeEnum.NUMBER_99 && outboundComplementFile.value) {
+      try {
+        const dataUrl = await readFileAsDataUrl(outboundComplementFile.value)
+        if (dataUrl) {
+          payload.payment_complement_pdf_base64 = dataUrl
+          payload.payment_complement_filename = outboundComplementFile.value.name
+        }
+      } catch (err) {
+        console.error('Error reading outbound complement file', err)
+      }
     }
     const resp = await outboundMutation.mutateAsync({data:payload})
     if(resp.status===201){
@@ -692,13 +763,6 @@ async function submitOutbound(){
             downloadOutboundPDF(resp.data.outbound_id)
               .then(()=> toast.add({severity:'info', summary:'PDF descargado', detail:'Remisión de salida generada', life:3000}))
               .catch(err=>{ console.error('Outbound PDF failed:', err); toast.add({severity:'warn', summary:'PDF de salida falló', life:4000}) })
-          )
-        }
-        if(outboundForm.generate_purchase_order){
-          downloadPromises.push(
-            downloadPurchaseOrderPDF(resp.data.outbound_id)
-              .then(()=> toast.add({severity:'info', summary:'PDF descargado', detail:'Orden de compra generada', life:3000}))
-              .catch(err=>{ console.error('Purchase order PDF failed:', err); toast.add({severity:'warn', summary:'PDF de orden de compra falló', life:4000}) })
           )
         }
         if(downloadPromises.length > 0){

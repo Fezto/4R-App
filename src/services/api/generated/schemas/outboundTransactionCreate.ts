@@ -12,6 +12,8 @@ import type { PaymentFormCode } from './paymentFormCode';
 import type { OutboundTransactionCreatePaymentFolio } from './outboundTransactionCreatePaymentFolio';
 import type { OutboundTransactionCreateTaxRate } from './outboundTransactionCreateTaxRate';
 import type { OutboundTransactionCreateFiscalFolio } from './outboundTransactionCreateFiscalFolio';
+import type { OutboundTransactionCreatePaymentComplementFilename } from './outboundTransactionCreatePaymentComplementFilename';
+import type { OutboundTransactionCreatePaymentComplementPdfBase64 } from './outboundTransactionCreatePaymentComplementPdfBase64';
 import type { OutboundTransactionCreateObservations } from './outboundTransactionCreateObservations';
 import type { OutboundTransactionCreateAuthorizedBy } from './outboundTransactionCreateAuthorizedBy';
 import type { OutboundTransactionCreateReceivedBy } from './outboundTransactionCreateReceivedBy';
@@ -35,10 +37,11 @@ export interface OutboundTransactionCreate {
   payment_folio?: OutboundTransactionCreatePaymentFolio;
   tax_rate?: OutboundTransactionCreateTaxRate;
   fiscal_folio?: OutboundTransactionCreateFiscalFolio;
+  payment_complement_filename?: OutboundTransactionCreatePaymentComplementFilename;
+  payment_complement_pdf_base64?: OutboundTransactionCreatePaymentComplementPdfBase64;
   observations?: OutboundTransactionCreateObservations;
   authorized_by?: OutboundTransactionCreateAuthorizedBy;
   received_by?: OutboundTransactionCreateReceivedBy;
   items: OutboundTransactionItem[];
   generate_pdf?: boolean;
-  generate_purchase_order?: boolean;
 }

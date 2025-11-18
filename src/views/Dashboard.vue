@@ -687,19 +687,19 @@ watch(
 .dashboard-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
 .dashboard-table th,
 .dashboard-table td {
-  padding: 0.75rem 0.5rem;
+  padding: 0.6rem 0.45rem;
   text-align: left;
   border-bottom: 1px solid rgba(148, 163, 184, 0.12);
 }
 
 .dashboard-table th {
   text-transform: uppercase;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   letter-spacing: 0.08em;
   color: rgba(148, 163, 184, 0.75);
 }

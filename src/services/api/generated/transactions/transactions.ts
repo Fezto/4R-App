@@ -177,7 +177,6 @@ export const useCreateCompleteInbound = <TError = HTTPValidationError,
    - Crea un OutboundDetail vinculado al outbound y operation
    - Resta el peso (quantity) del campo weight del Inventory
 4. Genera el PDF de salida automáticamente (opcional)
-5. Genera la orden de compra automáticamente (opcional)
 
 **Beneficios:**
 - Todo en una sola transacción (rollback automático si algo falla)

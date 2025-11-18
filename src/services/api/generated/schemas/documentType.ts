@@ -10,7 +10,10 @@ export type DocumentType = typeof DocumentType[keyof typeof DocumentType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const DocumentType = {
-  pdf: 'pdf',
-  png: 'png',
-  docx: 'docx',
+  INBOUND: 'INBOUND',
+  INBOUND_DETAIL: 'INBOUND_DETAIL',
+  OUTBOUND: 'OUTBOUND',
+  OUTBOUND_DETAIL: 'OUTBOUND_DETAIL',
+  PURCHASE_ORDER: 'PURCHASE_ORDER',
+  PURCHASE_COMPLEMENT: 'PURCHASE_COMPLEMENT',
 } as const;

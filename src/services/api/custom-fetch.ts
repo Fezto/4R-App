@@ -12,9 +12,9 @@ export const customFetch = async <T>(
   const response = await fetch(apiUrl, options)
   
   // Check if response is a PDF or binary file
-  const contentType = response.headers.get('content-type')
-  
-  if (contentType?.includes('application/pdf')) {
+  const contentType = (response.headers.get('content-type') || '').toLowerCase()
+
+  if (contentType.includes('application/pdf') || contentType.includes('application/octet-stream')) {
     // Handle PDF download
     const blob = await response.blob()
     const downloadUrl = window.URL.createObjectURL(blob)
@@ -48,18 +48,52 @@ export const customFetch = async <T>(
     } as T
   }
   
-  // Handle JSON responses
-  const body = [204, 205, 304].includes(response.status) 
-    ? null 
-    : await response.text()
-  
-  const data = body ? JSON.parse(body) : {}
-  
-  return {
-    data,
-    status: response.status,
-    headers: response.headers
-  } as T
+  // For no-content responses, return empty data
+  if ([204, 205, 304].includes(response.status)) {
+    return {
+      data: {},
+      status: response.status,
+      headers: response.headers
+    } as T
+  }
+
+  // If server explicitly returns JSON, use response.json()
+  if (contentType.includes('application/json')) {
+    try {
+      const json = await response.json()
+      return {
+        data: json,
+        status: response.status,
+        headers: response.headers
+      } as T
+    } catch (err) {
+      // Fallthrough to text handling below if JSON.parse fails
+      const textFallback = await response.text()
+      return {
+        data: textFallback as unknown as T,
+        status: response.status,
+        headers: response.headers
+      } as T
+    }
+  }
+
+  // For other content types (HTML error pages, plain text, etc.), try to parse JSON first,
+  // but don't throw on parse errors — return raw text instead.
+  const text = await response.text()
+  try {
+    const parsed = text ? JSON.parse(text) : {}
+    return {
+      data: parsed,
+      status: response.status,
+      headers: response.headers
+    } as T
+  } catch (_err) {
+    return {
+      data: (text as unknown) as T,
+      status: response.status,
+      headers: response.headers
+    } as T
+  }
 }
 
 export default customFetch

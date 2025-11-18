@@ -75,6 +75,45 @@ p {
 
 /* ===== COMPONENTES PRIMEVUE ===== */
 
+/* Encabezados de vistas consistentes */
+.view-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.view-header {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.view-header__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.view-header__actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.view-kicker {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(148, 163, 184, 0.8);
+}
+
+.view-title {
+  margin: 0;
+}
+
+.view-description {
+  margin: 0;
+}
+
 /* Cards con mejor presentación y sombras sutiles */
 .p-card {
   border-radius: 0.75rem;
@@ -186,6 +225,25 @@ p {
 .p-inputnumber-input::placeholder,
 .p-textarea::placeholder {
   color: rgba(255, 255, 255, 0.45); /* Placeholder con mejor contraste */
+}
+
+/* Tablas más compactas por defecto */
+.p-datatable {
+  font-size: 0.85rem;
+}
+
+.p-datatable .p-datatable-thead > tr > th {
+  padding: 0.55rem 0.65rem;
+  font-size: 0.75rem;
+  line-height: 1.1rem;
+}
+
+.p-datatable .p-datatable-tbody > tr > td {
+  padding: 0.55rem 0.65rem;
+}
+
+.p-datatable .p-paginator {
+  padding: 0.65rem;
 }
 
 /* Labels más profesionales con mejor contraste */
@@ -379,18 +437,19 @@ main {
   width: 100%;
   border-collapse: collapse;
   min-width: 540px;
+  font-size: 0.85rem;
 }
 
 .overview-table th,
 .overview-table td {
-  padding: 0.9rem 0.75rem;
+  padding: 0.7rem 0.6rem;
   border-bottom: 1px solid rgba(148, 163, 184, 0.12);
   text-align: left;
 }
 
 .overview-table th {
   text-transform: uppercase;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   letter-spacing: 0.08em;
   color: rgba(148, 163, 184, 0.75);
 }

@@ -5,4 +5,4 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type OutboundTransactionResponsePurchaseOrderPath = string | null;
+export type OutboundTransactionCreatePaymentComplementFilename = string | null;
